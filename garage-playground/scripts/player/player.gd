@@ -6,6 +6,10 @@ const JUMP_VELOCITY = 4.5
 #var Grenade = preload("res://scenes/Portals/portal_node.tscn")
 var canThrow = true
 
+@export var marker: Node3D
+@export var object_to_spawn: PackedScene
+@export var throw_strength: float = 500.0
+@export var player: Node3D
 
 @onready var animation_player: AnimationPlayer = $visuals/player/AnimationPlayer
 @onready var visuals: Node3D = $visuals
@@ -51,42 +55,23 @@ func _physics_process(delta: float) -> void:
 			walking = false
 			animation_player.play("idle")
 		
+	if Input.is_action_just_pressed("Throw"):
+		spawn_and_throw_object()
+	
+	
+	
 		
 	move_and_slide()
 	
-	#Grenade function
-	#grenadeThrow()
-	
-#func grenadeThrow():
-	#if Input.is_action_just_released("Throw") && canThrow:
-		#var grenadeins = Grenade.instantiate()
-		#grenadeins.position = $visuals/player/Armature/Nadepos.global_position
-		#get_tree().current_scene.add_child(grenadeins)
-		#
-		#canThrow = false
-		#$Throwtimer.start()
-		#
-		##force var for grenade in negative so it moves away from player
-		#var force = -20
-		##Control Arch of grenade
-		#var upDirection = 15
-		#var direction =  
-		#var impulse = direction * force + visuals.look_at
-		#
-		#var playerRotation = $visuals/player/Armature/Nadepos.global_transform.basis.z.normalized()
-		#
-		#grenadeins.apply_central_impulse(impulse)
+func spawn_and_throw_object():
+	if object_to_spawn:
+		var thrown_object = object_to_spawn.instantiate() as RigidBody3D
+		
+		thrown_object.position = marker.position
+		
+		get_parent().add_child(thrown_object)
 		
 		
+		var player_forward_direction = -player.transform.basis.z.normalized()
 		
-		
-
-		
-		
-		
-		
-		
-
-
-func _on_throwtimer_timeout() -> void:
-	canThrow = true
+		thrown_object.linear_velocity = player_forward_direction * throw_strength
