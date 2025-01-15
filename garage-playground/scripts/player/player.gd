@@ -3,8 +3,10 @@ extends CharacterBody3D
 
 const SPEED = 2.5
 const JUMP_VELOCITY = 4.5
-#var Grenade = preload("res://scenes/Portals/portal_node.tscn")
+var grenade = preload("res://scenes/grenade_portal.tscn")
 var canThrow = true
+var last_thrown = null
+var thrown_now = null
 
 @export var marker: Node3D
 @export var object_to_spawn: PackedScene
@@ -60,18 +62,25 @@ func _physics_process(delta: float) -> void:
 	
 	
 	
-		
+	is_on_wall()
+
 	move_and_slide()
 	
 func spawn_and_throw_object():
 	if object_to_spawn:
-		var thrown_object = object_to_spawn.instantiate() as RigidBody3D
+		var thrown_object = grenade.instantiate()
 		
-		thrown_object.position = marker.position
+		thrown_object.position = marker.global_position
 		
 		get_parent().add_child(thrown_object)
 		
-		
 		var player_forward_direction = -player.transform.basis.z.normalized()
 		
-		thrown_object.linear_velocity = player_forward_direction * throw_strength
+		thrown_object.get_node("RigidBody3D").linear_velocity = player_forward_direction * throw_strength
+		
+		if last_thrown:
+			thrown_object.get_node("Portal").connect_portal = last_thrown.get_node("Portal")
+			last_thrown.get_node("Portal").connect_portal = thrown_object.get_node("Portal")
+			last_thrown = null
+		else:
+			last_thrown = thrown_object

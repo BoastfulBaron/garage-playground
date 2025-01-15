@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://b3tadympaab2e"]
+
+[ext_resource type="Script" path="res://scenes/grenade_portal.gd" id="1_ud5a7"]
+[ext_resource type="PackedScene" uid="uid://dpfifol8jo4su" path="res://scenes/grenade.tscn" id="2_gw63v"]
+[ext_resource type="PackedScene" uid="uid://bwws55qv2ejfj" path="res://scenes/Portal.tscn" id="3_4kweg"]
+
+[node name="GrenadePortal" type="Node3D"]
+script = ExtResource("1_ud5a7")
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+
+[node name="RigidBody3D" parent="." instance=ExtResource("2_gw63v")]
+
+[node name="Portal" parent="." instance=ExtResource("3_4kweg")]
+visible = false
