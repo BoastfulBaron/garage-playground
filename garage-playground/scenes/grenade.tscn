@@ -1,4 +1,7 @@
-[gd_scene load_steps=5 format=4 uid="uid://dpfifol8jo4su"]
+[gd_scene load_steps=7 format=4 uid="uid://dpfifol8jo4su"]
+
+[ext_resource type="Script" path="res://scenes/grenade.gd" id="1_ag1c6"]
+[ext_resource type="PackedScene" uid="uid://bwws55qv2ejfj" path="res://scenes/Portal.tscn" id="2_f80f8"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_llrag"]
 
@@ -37,9 +40,11 @@ shadow_mesh = SubResource("ArrayMesh_aocd8")
 [sub_resource type="SphereShape3D" id="SphereShape3D_fxuci"]
 radius = 1.08997
 
-[node name="RigidBody3D" type="RigidBody3D"]
+[node name="Grenade" type="RigidBody3D"]
 continuous_cd = true
 contact_monitor = true
+script = ExtResource("1_ag1c6")
+object_to_spawn = ExtResource("2_f80f8")
 
 [node name="Nade" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
