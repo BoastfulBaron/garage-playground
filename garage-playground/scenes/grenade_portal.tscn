@@ -1,11 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://b3tadympaab2e"]
+[gd_scene load_steps=5 format=3 uid="uid://b3tadympaab2e"]
 
 [ext_resource type="Script" path="res://scenes/grenade_portal.gd" id="1_ud5a7"]
 [ext_resource type="PackedScene" uid="uid://dpfifol8jo4su" path="res://scenes/grenade.tscn" id="2_gw63v"]
+[ext_resource type="PackedScene" uid="uid://dxc6bbl8sm4h" path="res://scenes/portal_fx.tscn" id="2_hdsiu"]
 [ext_resource type="PackedScene" uid="uid://bwws55qv2ejfj" path="res://scenes/Portal.tscn" id="3_4kweg"]
 
 [node name="GrenadePortal" type="Node3D"]
 script = ExtResource("1_ud5a7")
+object_to_spawn = ExtResource("2_hdsiu")
 
 [node name="Timer" type="Timer" parent="."]
 one_shot = true
@@ -15,5 +17,7 @@ autostart = true
 
 [node name="Portal" parent="." instance=ExtResource("3_4kweg")]
 visible = false
+
+[node name="portal_fx" parent="." instance=ExtResource("2_hdsiu")]
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

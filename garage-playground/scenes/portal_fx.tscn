@@ -1,0 +1,78 @@
+[gd_scene load_steps=12 format=3 uid="uid://dxc6bbl8sm4h"]
+
+[ext_resource type="Shader" uid="uid://db4ohyj6gur7v" path="res://assets/shaders/portal/portal_shader.tres" id="1_8ekft"]
+[ext_resource type="Script" path="res://scripts/world/portal_fx.gd" id="1_m7dwd"]
+[ext_resource type="Texture2D" uid="uid://bpfmbdc0u1u4x" path="res://assets/T_VFX_lelu1_tiled.png" id="2_mm6li"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pmt5f"]
+render_priority = 0
+shader = ExtResource("1_8ekft")
+shader_parameter/Color_intensity = 10.0
+shader_parameter/Portal_color = Color(0.172549, 0.709804, 0.117647, 1)
+shader_parameter/Vector2Parameter = Vector2(-0.2, 0.2)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_x24uj"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xqfti"]
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+albedo_color = Color(0.121569, 0.682353, 0.141176, 1)
+albedo_texture = ExtResource("2_mm6li")
+use_particle_trails = true
+
+[sub_resource type="Curve" id="Curve_20cyo"]
+min_value = -2.0
+max_value = 2.0
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_75606"]
+curve_z = SubResource("Curve_20cyo")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_uqx23"]
+emission_shape_scale = Vector3(0.8, 0.8, 0.8)
+emission_shape = 6
+emission_ring_axis = Vector3(0, 0, 1)
+emission_ring_height = 0.0
+emission_ring_radius = 1.0
+emission_ring_inner_radius = 1.0
+orbit_velocity_min = 0.2
+orbit_velocity_max = 0.5
+orbit_velocity_curve = SubResource("CurveXYZTexture_75606")
+radial_velocity_min = 0.199978
+radial_velocity_max = 0.499978
+gravity = Vector3(0, 0, 0)
+radial_accel_min = 0.199998
+radial_accel_max = 0.499998
+
+[sub_resource type="RibbonTrailMesh" id="RibbonTrailMesh_ldktl"]
+size = 0.1
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_gyggq"]
+height = 0.0291482
+radius = 0.902301
+
+[node name="portal_fx" type="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.39757, 0)
+script = ExtResource("1_m7dwd")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+material_override = SubResource("ShaderMaterial_pmt5f")
+mesh = SubResource("PlaneMesh_x24uj")
+skeleton = NodePath("../..")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+material_override = SubResource("StandardMaterial3D_xqfti")
+amount = 150
+trail_enabled = true
+process_material = SubResource("ParticleProcessMaterial_uqx23")
+draw_pass_1 = SubResource("RibbonTrailMesh_ldktl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+shape = SubResource("CylinderShape3D_gyggq")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]

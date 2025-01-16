@@ -79,8 +79,8 @@ func spawn_and_throw_object():
 		thrown_object.get_node("RigidBody3D").linear_velocity = player_forward_direction * throw_strength
 		
 		if last_thrown:
-			thrown_object.get_node("Portal").connect_portal = last_thrown.get_node("Portal")
-			last_thrown.get_node("Portal").connect_portal = thrown_object.get_node("Portal")
+			thrown_object.get_node("portal_fx").connect_portal = last_thrown.get_node("portal_fx")
+			last_thrown.get_node("portal_fx").connect_portal = thrown_object.get_node("portal_fx")
 			last_thrown = null
 		else:
 			last_thrown = thrown_object
